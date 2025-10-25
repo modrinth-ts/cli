@@ -1,7 +1,7 @@
 <h1 align="center">
     <img src="https://github.com/modrinth-ts.png" width="75" height="auto">
-    <p>{{package.name}}</p>
+    <p>@modrinth-ts/cli</p>
 </h1>
 <p align="center">
-    <i>{{package.description}}</i>
+    <i>TypeScript CLI-only client for Modrinth</i>
 </p>
