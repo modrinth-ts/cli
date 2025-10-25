@@ -10,12 +10,8 @@
     "peerDependencies": {
         "typescript": "^5.9.3"
     },
-    "exports": {
-        ".": {
-            "default": "./dist/index.js",
-            "types": "./dist/index.d.ts"
-        },
-        "./package.json": "./package.json"
+    "bin": {
+        "modrinth": "./dist/index.js"
     },
     "description": "TypeScript CLI-only client for Modrinth",
     "scripts": {
@@ -40,5 +36,11 @@
     "simple-git-hooks": {
         "pre-commit": "bun run biome"
     },
-    "license": "MIT"
+    "license": "MIT",
+    "dependencies": {
+        "@inquirer/prompts": "^7.9.0",
+        "@modrinth-ts/lib": "^1.1.0",
+        "@modrinth-ts/mrpack": "^2.0.1",
+        "commander": "^14.0.1"
+    }
 }
