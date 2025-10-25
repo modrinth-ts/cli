@@ -1,5 +1,10 @@
 import { search } from '@inquirer/prompts';
-import { facets, searchProjects } from '@modrinth-ts/lib';
+import {
+    facets,
+    getProject,
+    getProjectTeamMembers,
+    searchProjects,
+} from '@modrinth-ts/lib';
 import chalk from 'chalk';
 import { Argument, Command } from 'commander';
 import { pointer } from '../utils';
@@ -14,7 +19,7 @@ command
             .argOptional(),
     )
     .action(async (what?: (typeof choices)[number]) => {
-        const project = await search({
+        const projectID = await search({
             message: `Selected ${what ? what : 'project'}:`,
             source: async (input, { signal }) => {
                 if (!input) return [];
@@ -33,26 +38,39 @@ command
 
                 return results.hits.map((project) => ({
                     name: project.title,
-                    value: project,
+                    value: project.project_id,
                     description: project.description,
                 }));
             },
         });
 
-        if (!project) throw new Error('It should not be possible to get here');
+        const { data: project } = await getProject({
+            path: { 'id|slug': projectID },
+        });
+        const { data: teamMembers } = await getProjectTeamMembers({
+            path: { 'id|slug': projectID },
+        });
+
+        if (!project || !teamMembers || !teamMembers.length)
+            throw new Error('It should not be possible to reach this point');
+
+        const license = project.license?.id
+            ? project.license.id.startsWith('LicenseRef-')
+                ? project.license.id.slice(11).replaceAll('-', ' ')
+                : project.license.id.replaceAll('-', ' ')
+            : 'Unknown';
 
         console.log(
             `
-${chalk.bold.blue(project.title || project.project_id)}, by ${chalk.underline.blue(project.author)}
-${chalk.dim('Last updated:')} ${chalk.dim.magenta(new Date(project.date_modified).toLocaleDateString())}
+${chalk.bold.blue(project.title || project.id)}, by ${teamMembers.map((member) => chalk.underline.blue(member.user.username)).join(', ')}
+${chalk.dim('Last updated:')} ${chalk.dim.magenta(new Date(project.updated).toLocaleDateString())}
+${project.description ? `\n${chalk.italic(project.description)}` : ''}
+${project.loaders?.length ? `\nFor ${project.loaders.map((loader) => chalk.bold.yellow(loader)).join(', ')}` : ''}
 
-${project.description || 'No description provided.'}
-
-${pointer} ${chalk.green('ID')}: ${project.project_id}
+${pointer} ${chalk.green('ID')}: ${project.id}
 ${pointer} ${chalk.green('Type')}: ${project.project_type}
 ${pointer} ${chalk.green('Downloads')}: ${project.downloads.toLocaleString()}
-${pointer} ${chalk.green('Categories')}: ${project.categories ? project.categories.join(', ') : 'none'}
-${pointer} ${chalk.green('License')}: ${project.license}
+${pointer} ${chalk.green('License')}: ${license}
 `.trim(),
         );
     });
