@@ -21,9 +21,8 @@ const loadCommands = async () => {
 };
 
 const main = async () => {
-    await program.parseAsync(process.argv);
-    const options = program.opts();
     console.clear();
+    await program.parseAsync(process.argv);
 };
 
 loadCommands().then(main);
