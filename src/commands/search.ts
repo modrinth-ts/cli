@@ -43,15 +43,15 @@ command
 
         console.log(
             `
-${chalk.bold.blue(project.title)}, by ${chalk.underline.blue(project.author)}
+${chalk.bold.blue(project.title || project.project_id)}, by ${chalk.underline.blue(project.author)}
 ${chalk.dim('Last updated:')} ${chalk.dim.magenta(new Date(project.date_modified).toLocaleDateString())}
 
-${project.description}
+${project.description || 'No description provided.'}
 
-${pointer} ${chalk.green('Slug')}: ${project.slug}
+${pointer} ${chalk.green('ID')}: ${project.project_id}
 ${pointer} ${chalk.green('Type')}: ${project.project_type}
 ${pointer} ${chalk.green('Downloads')}: ${project.downloads.toLocaleString()}
-${pointer} ${chalk.green('Categories')}: ${project.display_categories ? project.display_categories.join(', ') : 'none'}
+${pointer} ${chalk.green('Categories')}: ${project.categories ? project.categories.join(', ') : 'none'}
 ${pointer} ${chalk.green('License')}: ${project.license}
 `.trim(),
         );
