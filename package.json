@@ -41,6 +41,7 @@
         "@inquirer/prompts": "^7.9.0",
         "@modrinth-ts/lib": "^1.1.0",
         "@modrinth-ts/mrpack": "^2.0.1",
+        "chalk": "^5.6.2",
         "commander": "^14.0.1"
     }
 }
