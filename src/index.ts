@@ -14,6 +14,7 @@ program
 const loadCommands = async () => {
     for await (const file of glob('*.ts', { cwd: COMMANDS_DIR })) {
         const { default: command } = await import(file);
+        if (!command || !(command instanceof Command)) continue;
         program.addCommand(command);
     }
 };
