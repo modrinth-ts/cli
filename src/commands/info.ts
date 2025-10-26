@@ -9,7 +9,7 @@ const cmd = command({
     name: fileName(import.meta),
     desc: 'Get information about a Modrinth project',
     options: withSearchOptions,
-    transform: withProject,
+    transform: (args) => withProject(args),
     handler: async ({ project }) => {
         if (!project) return console.error(chalk.red('Project not found'));
 
