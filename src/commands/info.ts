@@ -1,6 +1,6 @@
 import { getProjectTeamMembers } from '@modrinth-ts/lib';
 import chalk from 'chalk';
-import { commandFromFileName, pointer } from '../utils';
+import { assertHasValue, commandFromFileName, pointer } from '../utils';
 import { type Choice, searchArgument, searchProject } from '../utils/search';
 
 const command = commandFromFileName(import.meta);
@@ -14,8 +14,7 @@ command.addArgument(searchArgument).action(async (what?: Choice) => {
         path: { 'id|slug': project.id },
     });
 
-    if (!teamMembers || !teamMembers.length)
-        throw new Error('It should not be possible to reach this point');
+    assertHasValue(teamMembers);
 
     const license = project.license?.id
         ? project.license.id.startsWith('LicenseRef-')
