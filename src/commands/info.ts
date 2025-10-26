@@ -1,5 +1,6 @@
 import { getProjectTeamMembers } from '@modrinth-ts/lib';
 import chalk from 'chalk';
+import moment from 'moment';
 import { assertHasValue, commandFromFileName, pointer } from '../utils';
 import { type Choice, searchArgument, searchProject } from '../utils/search';
 
@@ -25,7 +26,7 @@ command.addArgument(searchArgument).action(async (what?: Choice) => {
     console.log(
         `
 ${chalk.bold.blue(project.title || project.id)}, by ${teamMembers.map((member) => chalk.underline.blue(member.user.username)).join(', ')}
-${chalk.dim('Last updated:')} ${chalk.dim.magenta(new Date(project.updated).toLocaleDateString())}
+${chalk.dim('Last updated:')} ${chalk.dim.magenta(moment(project.updated).fromNow())}
 ${project.description ? `\n${chalk.italic(project.description)}` : ''}
 ${project.loaders?.length ? `\nFor ${project.loaders.map((loader) => chalk.bold.yellow(loader)).join(', ')}` : ''}
 
