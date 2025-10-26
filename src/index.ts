@@ -20,9 +20,4 @@ const loadCommands = async () => {
     }
 };
 
-const main = async () => {
-    console.clear();
-    await program.parseAsync(process.argv);
-};
-
-loadCommands().then(main);
+loadCommands().then(() => program.parseAsync(process.argv));
