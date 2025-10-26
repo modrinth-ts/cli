@@ -71,6 +71,8 @@ ${pointer} ${chalk.green('ID')}: ${project.id}
 ${pointer} ${chalk.green('Type')}: ${project.project_type}
 ${pointer} ${chalk.green('Downloads')}: ${project.downloads.toLocaleString()}
 ${pointer} ${chalk.green('License')}: ${license}
+
+${chalk.underline.blue(`https://modrinth.com/project/${project.id}`)}
 `.trim(),
         );
     });
