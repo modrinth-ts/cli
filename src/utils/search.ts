@@ -1,6 +1,5 @@
 import { search } from '@inquirer/prompts';
 import { facets, getProject, searchProjects } from '@modrinth-ts/lib';
-import { Argument } from 'commander';
 
 export const choices = ['mod', 'modpack', 'resourcepack', 'shader'] as const;
 
@@ -9,11 +8,6 @@ export type Choice = ChoiceStrict | (string & {});
 
 export const isStrictChoice = (value?: Choice): value is ChoiceStrict =>
     typeof value === 'string' && choices.includes(value as ChoiceStrict);
-
-export const searchArgument = new Argument(
-    'what',
-    `What to search for (choices: ${choices.map((choice) => `"${choice}"`).join(', ')}, project ID or slug)`,
-).argOptional();
 
 export const searchProject = async (what?: Choice) => {
     const projectID =

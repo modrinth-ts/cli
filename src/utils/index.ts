@@ -1,6 +1,5 @@
 import { normalize, resolve } from 'node:path';
 import chalk from 'chalk';
-import { Command } from 'commander';
 
 export const relativeToMe = (me: ImportMeta, ...paths: string[]) =>
     normalize(
@@ -9,8 +8,7 @@ export const relativeToMe = (me: ImportMeta, ...paths: string[]) =>
 
 export const pointer = chalk.dim.magenta('>');
 
-export const commandFromFileName = (me: ImportMeta) =>
-    new Command(me.file.trim().replace('.ts', ''));
+export const fileName = (me: ImportMeta) => me.file.trim().replace('.ts', '');
 
 export const assertHasValue: <T>(
     value: T | null | undefined,
@@ -26,3 +24,16 @@ export const assertHasValue: <T>(
     )
         throw new Error(message);
 };
+
+export const DEFAULT_MINECRAFT_FOLDER = normalize(
+    process.platform === 'win32'
+        ? resolve(process.env.APPDATA, '.minecraft')
+        : process.platform === 'darwin'
+          ? resolve(
+                process.env.HOME,
+                'Library',
+                'Application Support',
+                'minecraft',
+            )
+          : resolve(process.env.HOME, '.minecraft'),
+);
