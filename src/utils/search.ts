@@ -1,7 +1,15 @@
+import { positional, string } from '@drizzle-team/brocli';
 import { search } from '@inquirer/prompts';
 import { facets, getProject, searchProjects } from '@modrinth-ts/lib';
 
 export const choices = ['mod', 'modpack', 'resourcepack', 'shader'] as const;
+
+export const withSearchOptions = {
+    what: positional()
+        .enum(...choices)
+        .desc('What to search for'),
+    exact: string().alias('e').desc('Project ID or slug'),
+} as const;
 
 export type ChoiceStrict = (typeof choices)[number];
 export type Choice = ChoiceStrict | (string & {});

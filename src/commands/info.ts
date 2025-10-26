@@ -1,19 +1,14 @@
-import { command, positional, string } from '@drizzle-team/brocli';
+import { command } from '@drizzle-team/brocli';
 import { getProjectTeamMembers } from '@modrinth-ts/lib';
 import chalk from 'chalk';
 import moment from 'moment';
 import { assertHasValue, fileName, pointer } from '../utils';
-import { choices, searchProject } from '../utils/search';
+import { searchProject, withSearchOptions } from '../utils/search';
 
 const cmd = command({
     name: fileName(import.meta),
     desc: 'Get information about a Modrinth project',
-    options: {
-        what: positional()
-            .enum(...choices)
-            .desc('What to search for'),
-        exact: string().alias('e').desc('Project ID or slug'),
-    },
+    options: withSearchOptions,
     handler: async ({ what, exact }) => {
         const project = await searchProject(exact || what);
 
