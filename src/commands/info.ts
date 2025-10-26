@@ -3,15 +3,14 @@ import { getProjectTeamMembers } from '@modrinth-ts/lib';
 import chalk from 'chalk';
 import moment from 'moment';
 import { assertHasValue, fileName, pointer } from '../utils';
-import { searchProject, withSearchOptions } from '../utils/search';
+import { withProject, withSearchOptions } from '../utils/search';
 
 const cmd = command({
     name: fileName(import.meta),
     desc: 'Get information about a Modrinth project',
     options: withSearchOptions,
-    handler: async ({ what, exact }) => {
-        const project = await searchProject(exact || what);
-
+    transform: withProject,
+    handler: async ({ project }) => {
         if (!project) return console.error(chalk.red('Project not found'));
 
         const { data: teamMembers } = await getProjectTeamMembers({

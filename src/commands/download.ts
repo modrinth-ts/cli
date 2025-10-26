@@ -1,7 +1,7 @@
 import { command, string } from '@drizzle-team/brocli';
 import chalk from 'chalk';
 import { DEFAULT_MINECRAFT_FOLDER, fileName } from '../utils';
-import { searchProject, withSearchOptions } from '../utils/search';
+import { withProject, withSearchOptions } from '../utils/search';
 
 const cmd = command({
     name: fileName(import.meta),
@@ -13,9 +13,8 @@ const cmd = command({
             .default(DEFAULT_MINECRAFT_FOLDER)
             .desc('Path to your Minecraft folder'),
     },
-    handler: async ({ what, exact, 'minecraft-folder': minecraftFolder }) => {
-        const project = await searchProject(exact || what);
-
+    transform: (args) => withProject(args),
+    handler: async ({ project, 'minecraft-folder': minecraftFolder }) => {
         if (!project) return console.error(chalk.red('Project not found'));
     },
 });

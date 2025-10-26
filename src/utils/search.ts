@@ -14,6 +14,22 @@ export const withSearchOptions = {
 export type ChoiceStrict = (typeof choices)[number];
 export type Choice = ChoiceStrict | (string & {});
 
+export const withProject = async <
+    T extends { what?: ChoiceStrict; exact?: string },
+>(
+    args: T,
+) => {
+    const { what, exact, ...rest } = args;
+    const project = await searchProject(exact || what);
+
+    return {
+        ...rest,
+        what,
+        exact,
+        project,
+    };
+};
+
 export const isStrictChoice = (value?: Choice): value is ChoiceStrict =>
     typeof value === 'string' && choices.includes(value as ChoiceStrict);
 
