@@ -18,9 +18,10 @@ command.addArgument(searchArgument).action(async (what?: Choice) => {
     assertHasValue(teamMembers);
 
     const license = project.license?.id
-        ? project.license.id.startsWith('LicenseRef-')
-            ? project.license.id.slice(11).replaceAll('-', ' ')
-            : project.license.id.replaceAll('-', ' ')
+        ? (project.license.id.startsWith('LicenseRef-')
+              ? project.license.id.slice(11)
+              : project.license.id
+          ).replaceAll('-', ' ')
         : 'Unknown';
 
     console.log(
