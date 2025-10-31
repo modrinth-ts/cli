@@ -2,7 +2,7 @@ import { glob } from 'node:fs/promises';
 import { join } from 'node:path';
 import { type Command, run } from '@drizzle-team/brocli';
 import pkg from '../package.json';
-import { relativeToMe } from './utils';
+import { dev, relativeToMe } from './utils';
 
 const COMMANDS_DIR = relativeToMe(import.meta, 'commands');
 
@@ -18,10 +18,11 @@ const loadCommands = async () => {
     return commands;
 };
 
-loadCommands().then((commands) =>
+loadCommands().then((commands) => {
+    if (dev) console.clear();
     run(commands, {
         name: Object.keys(pkg.bin)[0] || 'modrinth',
         version: pkg.version,
         description: pkg.description,
-    }),
-);
+    });
+});

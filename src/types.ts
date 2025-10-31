@@ -3,8 +3,9 @@ declare global {
         interface ProcessEnv {
             APPDATA: string;
             HOME: string;
+            DEV?: 'true' | 'false';
         }
     }
 }
 
-export {};
+export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;

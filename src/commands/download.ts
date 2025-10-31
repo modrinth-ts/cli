@@ -3,9 +3,24 @@ import { join } from 'node:path';
 import { command, positional, string } from '@drizzle-team/brocli';
 import { getProjectVersions } from '@modrinth-ts/lib';
 import chalk from 'chalk';
-import { assertHasValue, DEFAULT_MINECRAFT_FOLDER, fileName } from '../utils';
+import {
+    assertHasValue,
+    createRequiredFolders,
+    DEFAULT_MINECRAFT_FOLDER,
+    fileName,
+} from '../utils';
 import { checkSHA512 } from '../utils/hashing';
-import { withProject, withSearchOptions } from '../utils/search';
+import {
+    type ChoiceStrict,
+    withProject,
+    withSearchOptions,
+} from '../utils/search';
+
+const DESTINATIONS: Record<Exclude<ChoiceStrict, 'modpack'>, string> = {
+    mod: 'mods',
+    resourcepack: 'resourcepacks',
+    shader: 'shaderpacks',
+} as const;
 
 const cmd = command({
     name: fileName(import.meta),
@@ -54,10 +69,31 @@ const cmd = command({
         if (!isValid)
             return console.error(chalk.red('Downloaded file is corrupted'));
 
-        console.log(isValid);
+        if (project.project_type === 'modpack') return; // TODO: handle modpacks
 
-        // const filePath = join(mcFolder, 'mods', file.filename);
-        // await writeFile(filePath, Buffer.from(fileData));
+        const filePath = join(
+            mcFolder,
+            DESTINATIONS[project.project_type],
+            file.filename,
+        );
+
+        try {
+            await createRequiredFolders(filePath);
+            await writeFile(filePath, Buffer.from(fileData));
+        } catch (error) {
+            return console.error(
+                chalk.red(
+                    'Failed to write file to disk:',
+                    (error as Error).message,
+                ),
+            );
+        }
+
+        console.log(
+            chalk.green(
+                `Successfully downloaded ${chalk.bold.blue(project.title)} to ${chalk.magenta(filePath)}`,
+            ),
+        );
     },
 });
 

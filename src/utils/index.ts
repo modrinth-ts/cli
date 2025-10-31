@@ -1,4 +1,5 @@
-import { normalize, resolve } from 'node:path';
+import { mkdir } from 'node:fs/promises';
+import { dirname, normalize, resolve } from 'node:path';
 import chalk from 'chalk';
 
 export const relativeToMe = (me: ImportMeta, ...paths: string[]) =>
@@ -37,3 +38,10 @@ export const DEFAULT_MINECRAFT_FOLDER = normalize(
             )
           : resolve(process.env.HOME, '.minecraft'),
 );
+
+export const createRequiredFolders = async (...paths: string[]) => {
+    const path = dirname(normalize(resolve(...paths)));
+    await mkdir(path, { recursive: true });
+};
+
+export const dev = process.env.DEV === 'true';
