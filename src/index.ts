@@ -1,10 +1,16 @@
 import { glob } from 'node:fs/promises';
 import { join } from 'node:path';
 import { type Command, run } from '@drizzle-team/brocli';
+import { client } from '@modrinth-ts/lib/client';
 import pkg from '../package.json';
 import { dev, relativeToMe } from './utils';
 
 const COMMANDS_DIR = relativeToMe(import.meta, 'commands');
+
+client.setConfig({
+    throwOnError: true,
+    validateStatus: (status) => status < 400,
+});
 
 const loadCommands = async () => {
     const commands: Command[] = [];
